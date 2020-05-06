@@ -1,0 +1,13 @@
+<!-- 繼承模板 -->
+{% extends "blog/blog_list.html" %}
+
+<!-- 繼承標題區塊 -->
+
+{% block title %} 
+    <title>{{blog_type.type_name}}</title>
+{% endblock %}
+
+{% block blog_list_title %}
+按日期分類：{{blogs_with_date}}
+<a href="{% url 'blog_list' %}">查看全部分類</a>
+{% endblock %}

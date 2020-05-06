@@ -1,0 +1,165 @@
+<!-- 繼承模板 -->
+{% extends "base.html" %}
+
+{% load static %}
+<!-- 導入 staticfiles -->
+
+<!-- 繼承標題區塊 -->
+
+{% load comment_tags %}
+{% load likes_tags %}
+
+{% block title %}我的部落格{% endblock %}
+{% block nav_blog_active %}active{% endblock %}
+
+{% block header_extends %}
+<link rel="stylesheet" href="{% static 'blog/blog.css' %}">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ"
+    crossorigin="anonymous">
+{% endblock %}
+
+<!-- 繼承內容區塊 -->
+
+{%block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12 col-sm-8 col-md-9 col-lg-10">
+
+            <div class="card">
+                <div class="card-header">
+                    {% block blog_list_title %}文章列表{% endblock %}
+                </div>
+
+                <div class="card-body">
+                    {% for blog in page_of_blogs.object_list %}
+                    <!-- 說定超連結，導向文章詳細頁面  -->
+                    <div class="blog">
+                        <h3><a href="{% url 'blog_detail' blog.pk %}">{{blog.title}}</a></h3>
+                        <p class="blog-info">
+                            <i class="fas fa-pen"></i>
+                            <a href="{% url 'blogs_with_type' blog.blog_type.pk %}"> {{blog.blog_type}} </a>&nbsp;
+
+                            <i class="far fa-clock"></i>
+                            {{blog.created_time|date:"Y-m-d"}}&nbsp;
+                            閱讀（{{blog.get_read_num}}）
+                            評論（{% get_comment_count blog %}）
+                            <span>
+                                <i class="far fa-thumbs-up"></i>
+                                <span class="liked_num">{% get_like_count blog %}</span>  
+                                
+                            </span>
+                        </p>
+
+
+                        <!-- truncatechars:<int> (縮略長文)  -->
+                        <p>{{blog.content|striptags|truncatechars:120}}</p>
+                    </div>
+                    <!-- 若無文章，則顯示以下訊息 -->
+                    {% empty %}
+                    <div class="blog">
+                        <h3>暫無文章，敬請期待</h3>
+                    </div>
+                    {% endfor %}
+                    <!-- 取得blogs篇數 -->
+                </div>
+            </div>
+
+            <div class="paginator">
+
+                <ul class="pagination">
+                    {#上一頁#}
+                    {% if page_of_blogs.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page={{page_of_blogs.previous_page_number}}">Previous</a></li>
+                    {% else %}
+                    <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+                    {% endif %}
+                    {%for page_number in page_range %}
+                    {%if page_number == page_of_blogs.number%}
+                    <li class="page-item active">
+                        <a class="page-link" href="?page={{page_number}}">{{page_number}}
+
+                        </a>
+                    </li>
+                    {%else%}
+                    {%if page_number == '...' %}
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#">{{page_number}}</a>
+                    </li>
+                    {%else%}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{page_number}}">{{page_number}}
+
+                        </a>
+                    </li>
+                    {%endif%}
+
+                    {%endif%}
+
+                    {%endfor%}
+                    {#下一頁#}
+                    {% if page_of_blogs.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{page_of_blogs.next_page_number}}">Next</a></li>
+                    {% else %}
+                    <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
+                    {% endif %}
+                </ul>
+
+                <p>共有{{page_of_blogs.paginator.count}}篇文章，
+                    當前第{{page_of_blogs.number}}頁，
+                    共{{page_of_blogs.paginator.num_pages}}頁
+                </p>
+
+            </div>
+
+        </div>
+        <div class="d-none d-sm-block col-sm-4 col-md-3 col-lg-2">
+            <div class="card">
+                <div class="card-header">
+                    部落格分類
+                </div>
+                <div class="card-body">
+                    <ul class="blog-types">
+                        {%for blog_type in blog_types%}
+
+                        <li><a href="{% url 'blogs_with_type' blog_type.pk %}">
+                                {{blog_type.type_name}} ({{blog_type.blog_count}})
+                            </a></li>
+                        {% empty %}
+                        <li>暫無分類</li>
+                        {%endfor%}
+                    </ul>
+                </div>
+
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    按日期分類
+                </div>
+                <div class="card-body">
+                   <ul>
+                       {%for blog_date, blog_count in blog_dates.items%}
+                       
+                       <li>
+                            <a href="{% url 'blogs_with_date' blog_date.year blog_date.month %}">
+                                {{blog_date|date:"Y年m月"}} ({{ blog_count}})
+                            </a>
+                       </li> 
+                       {%empty%}
+
+                       {%endfor%}
+                       
+                    
+                   </ul>
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,35 @@
+* {
+    margin: 0;   /*預設邊界修改為0*/
+    padding: 0;  
+}
+
+@font-face{
+    font-family:'cinecaption';
+    src:url('font/cinecaption226.ttf') format('truetype');
+    
+}
+
+.cinecaption{
+    font-family: cinecaption;
+}
+
+body {
+    margin-top: 80px!important;
+}
+
+marquee{
+    font-family: '微軟正黑體';
+    color:blueviolet;
+    text-shadow: 0 0 10px blue;
+}
+
+.gradient{
+    background:-webkit-linear-gradient(
+        top left,#7fccf1 0%,#8f82ba 20%,#ed9fbe 40%,#f09c76 60%,
+        #fff59b 80%,#89c797 100%
+        );
+    width: 50%;
+    margin: auto;
+    text-align: center;
+    font-size: 36pt;
+}

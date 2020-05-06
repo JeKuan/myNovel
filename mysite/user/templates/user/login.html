@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+我的網站 | 登入
+{% endblock %}
+
+
+{% block nav_home_active %}active{% endblock %}
+
+{% block header_extends %}
+<!-- 導入css文件-->
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock %}
+
+<!-- 繼承內容區塊 -->
+
+{%block content %}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-xs-6">
+            {% if not user.is_authenticated %}
+            <div class="card bg-warning">
+                <div class="card-header ">登入</div>
+                <div class="card-body">
+                    <form action="" method="POST">
+                        {% csrf_token %}
+
+                        {%for field in login_form %}
+                        <label for="{{field.id_for_label}}">{{field.label}}</label>
+                        {{field}}
+                        <p class="text-danger">
+                            {{field.erros.as_text}}
+                        </p>
+                        {%endfor%}
+                        <span class="float-left text-danger">{{login_form.non_field_errors.0}}</span>
+                        <div class="clearfix"></div>
+                        <a href="{%url 'forgot_password' %}" class="float-left">忘記密碼？</a>
+                        <input type="submit" value="登入" class="btn btn-primary float-right">
+
+                    </form>
+                </div>
+            </div>
+            {%else %}
+            <span>已登入，跳轉至首頁…</span>
+            <script type="text/javascript">
+                window.location.href = '/';
+            </script>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

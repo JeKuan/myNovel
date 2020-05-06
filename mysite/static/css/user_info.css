@@ -1,0 +1,8 @@
+
+ul  {
+    list-style: none!important;
+}
+
+ul.navbar-right {
+    margin-right: 0;
+}

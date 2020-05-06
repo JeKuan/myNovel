@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+我的網站 | 首頁
+{% endblock %}
+
+{% block header_extends %}
+<!-- 導入css文件-->
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+<script src="https://code.highcharts.com/highcharts.js"></script>
+{% endblock %}
+
+
+{% block nav_home_active %}active{% endblock %}
+
+<!-- 繼承內容區塊 -->
+
+{%block content %}
+<!-- 加入css 標籤讓css 文件辨別-->
+<h3 class="home-content"><marquee behavior="scroll" direction="left" >歡迎光臨哲林小說網</marquee></h3>
+
+<div id="container">
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var myChart = Highcharts.chart('container', {
+                chart: {
+                    type: 'line'
+                },
+                title: {
+                    text: null
+                },
+
+                xAxis: {
+                    categories: {{ dates| safe }},
+            tickmarkPlacement: 'on',
+            title: { text: '前7日閱讀量變化' },
+                },
+            yAxis: {
+                title: {
+                    text: null
+                },
+                labels: { enabled: false },
+                gridLineDashStyle: 'Dash',
+            },
+            series: [{
+                name: '閱讀量',
+                data: {{ read_nums }}
+                }],
+            plotOptions: {
+                line: {
+                    dataLabels: {
+                        enabled: true
+                    }
+                }
+            },
+            legend: { enabled: false },
+            credits: { enabled: false },
+            });
+        });
+    </script>
+</div>
+
+<!-- 今天24小時熱門文章-->
+<div class="hot-data">
+    <h3 class="hot_data_title">
+            
+        今天<ruby>熱門<rt>あつい</rt></ruby>點擊
+    </h3>
+    <ul>
+        {%for hot_data in today_hot_data %}
+        <li>
+            <a href="{% url 'blog_detail' hot_data.content_object.pk %}">{{hot_data.content_object.title}}</a>
+            ({{hot_data.read_num}})
+        </li>
+        {%empty%}
+        <li>今天暫時沒有熱門文章</li>
+
+        {%endfor%}
+
+    </ul>
+
+</div>
+
+<div class="hot-data">
+    <h3 class="hot_data_title">昨天<ruby>熱門<rt>あつい</rt></ruby>點擊</h3>
+    <ul>
+        {%for hot_data in yesterday_hot_data %}
+        <li>
+            <a href="{% url 'blog_detail' hot_data.content_object.pk %}">{{hot_data.content_object.title}}</a>
+            ({{hot_data.read_num}})
+        </li>
+        {%empty%}
+        <li>昨天暫時沒有熱門文章</li>
+    
+        {%endfor%}
+    
+    </ul>
+</div>
+
+<div class="hot-data">
+    <h3 class="hot_data_title">本週<ruby>熱門<rt>あつい</rt></ruby>點擊</h3>
+    <ul>
+        {%for hot_blog in seven_hot_data %}
+        <li>
+            <a href="{% url 'blog_detail' hot_blog.id %}">{{hot_blog.title}}</a>
+            ({{hot_blog.read_num_sum}})
+        </li>
+        {%empty%}
+        <li>本週暫時沒有熱門文章</li>
+    
+        {%endfor%}
+    
+    </ul>
+</div>
+
+<div class="hot-data">
+    <h3 class="hot_data_title">本月<ruby>熱門<rt>あつい</rt></ruby>點擊</h3>
+    <ul>
+        {%for hot_blog in thirty_hot_data %}
+        <li>
+            <a href="{% url 'blog_detail' hot_blog.id %}">{{hot_blog.title}}</a>
+            ({{hot_blog.read_num_sum}})
+        </li>
+        {%empty%}
+        <li>本月暫時沒有熱門文章</li>
+    
+        {%endfor%}
+    
+    </ul>
+</div>
+{% endblock %}

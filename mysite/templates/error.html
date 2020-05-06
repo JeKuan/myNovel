@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+我的網站 | 錯誤
+{% endblock %}
+
+
+{% block nav_home_active %}active{% endblock %}
+
+<!-- 繼承內容區塊 -->
+
+{%block content %}
+    {{message}}，<a href="{{redirect_to}}">返回</a>
+{% endblock %}

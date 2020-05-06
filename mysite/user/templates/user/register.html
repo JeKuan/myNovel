@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+我的網站 | 註冊
+{% endblock %}
+
+
+{% block nav_home_active %}active{% endblock %}
+
+
+<!-- 繼承內容區塊 -->
+
+{%block content %}
+
+<div class="container bg-dark">
+    <div class="row justify-content-center">
+        <div class="col-xs-6">
+            {% if not user.is_authenticated %}
+            <div class="card bg-warning" style="width:400px;">
+                <div class="card-header font-weight-bold">註冊</div>
+                <div class="card-body">
+                    <form action="" method="POST">
+                        {% csrf_token %}
+
+                        {%for field in reg_form %}
+                        <label for="{{field.id_for_label}}">{{field.label}}</label>
+                        {{field}}
+                        <p class="text-danger">
+                            {{field.errors.as_text}}
+                        </p>
+                        {%endfor%}
+                        <span class="text-danger">{{reg_form.non_field_errors.0}}</span>
+                        <div class="clearfix"></div>
+                        <button type="button" id = "send_code" class="btn btn-primary float-left">發送驗證碼</button>
+                        <input type="submit" value="註冊" class="btn btn-primary float-right">
+
+                    </form>
+                </div>
+            </div>
+            {%else %}
+            <span>已登入，跳轉至首頁…</span>
+            <script type="text/javascript">
+                window.location.href = '/';
+            </script>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+
+{%block script_extends %}
+    <script type="text/javascript">
+        $("#send_code").click(function(){
+            var email = $('#id_email').val();
+            if(email==""){
+                $("#tip").text('郵箱不得為空')
+                return false;
+            }
+            //發送驗證碼
+            $.ajax({
+                url: "{% url 'send_verification_code' %}",
+                type: "GET",
+                data: {
+                    'email' : email,
+                    'send_for' : 'register_code',
+
+                },
+                cache: false,
+                success: function(data){
+                    if(data['status']=='ERROR'){
+                        alert(data['status']);
+                    }
+                   
+                }
+                
+            });
+            //把按鈕變灰
+            $(this).addClass('disabled');
+            $(this).attr('disabled',true);
+            var time = 30;
+            $(this).text(time + 's');
+            var interval = setInterval(() => {
+                if(time <= 0){
+                    clearInterval(interval);
+                    $(this).removeClass('disabled');
+                    $(this).attr('disabled',false);
+                    $(this).text('發送驗證碼');
+                    return false;
+                }
+                time--;
+                $(this).text(time + 's');
+
+            }, 1000)
+
+        });
+    </script>
+
+{%endblock%}

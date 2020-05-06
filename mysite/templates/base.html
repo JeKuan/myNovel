@@ -1,0 +1,98 @@
+{% load static %}
+<!-- 導入 staticfiles -->
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"> <!-- 對應IE瀏覽器 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1"> <!-- 適應響應式設計 -->
+  <!-- 將標題區塊化 -->
+  <title>{% block title %}{% endblock %}</title>
+  <!-- 導入 css 文件 -->
+  <link rel="stylesheet" href="{% static 'css/base.css' %}">
+  <script type="text/javascript" src="{% static 'jquery-3.4.1.min.js' %}"></script>
+  <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+  <script type="text/javascript" src="{% static 'bootstrap/js/bootstrap.min.js'%}"></script>
+
+  {% block header_extends %}{% endblock %}
+  <!-- 用於擴展額外 css -->
+
+
+
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-danger fixed-top">
+
+
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{%url 'home'%}">
+        <img src="{% static 'img/p10.png' %}" class="rounded-circle" alt="Cinque Terre" width=40px>
+         <span class="cinecaption text-warning">哲林小天地</span> 
+      </a>
+      <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbar-collapse">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div id="navbar-collapse" class="collapse navbar-collapse">
+        <ul class="navbar-nav mr-auto">
+          <li class="{% block nav_home_active %}{% endblock %}">
+            <a class="nav-link cinecaption" href="{%url 'home'%}">首頁</a>
+          </li>
+          <li class="{%block nav_blog_active%}{% endblock %}">
+            <a class="nav-link cinecaption" href="{%url 'blog_list'%}">部落格</a>
+          </li>
+
+
+        </ul>
+
+        <ul class="nav navbar-nav navbar-right">
+          {% if not user.is_authenticated %}
+          
+                 
+
+          <li class="nav-item">
+            <a class="nav-link text-warning cinecaption" href="{%url 'login'%}?from={{request.get_full_path}}">登入</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-success cinecaption" href="{%url 'register'%}?from={{request.get_full_path}}">註冊</a>
+          </li>
+          {% else %}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle cinecaption" href="#" id="navbardrop" data-toggle="dropdown">
+              {%if user.has_nickname%}
+                  {{user.username}}({{user.get_nickname}})
+              {%else%}
+                  {{user.username}}
+              {%endif%}
+            </a>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="{%url 'user_info'%}">個人資料</a>
+              <a class="dropdown-item" href="{%url 'admin:index'%}">後台管理</a>
+              <a class="dropdown-item" href="{%url 'logout'%}?from={{request.get_full_path}}">登出</a>
+              <a class="dropdown-item" href="{%url 'change_password' %}">修改密碼</a>
+              
+             
+            </div>
+          </li>
+          {%endif%}
+        </ul>
+
+      </div>
+    </div>
+
+
+  </nav>
+
+  {% block content %}{% endblock %}
+
+  <!-- 導入bootstrap和jquery-->
+
+  {%block script_extends %}{%endblock%}
+
+
+
+</body>
+
+</html>

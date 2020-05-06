@@ -1,0 +1,40 @@
+ul.blog-types{
+    list-style-type:none;
+}
+
+div.paginator{
+    text-align: center;
+    margin-bottom: 2em;
+}
+
+ul.pagination{
+    margin-top: 2em;
+    margin-bottom: 1em;
+    margin-left: 250px;
+}
+
+div.blog:not(:last-child){
+    margin-bottom: 2em;
+    padding-bottom: 1em;
+    border-bottom: 1px solid #eee;
+}
+
+div.blog h3{
+    margin-top:0.5em;
+}
+
+div.blog p.blog-info{
+    margin-bottom: 0;
+}
+
+ul.blog-info-description{
+    list-style-type:none!important;
+}
+
+ul.blog-info-description li{
+    display: inline-block;
+}
+
+ul{
+    list-style: none;
+}
